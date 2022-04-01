@@ -20,15 +20,16 @@ eval env expr = case expr of
   Variable var -> fromMaybe expr $ lookup var env
   Lambda arg body -> Lambda arg $ eval (extend env arg (Variable arg)) body
   Application fun arg ->
-    case eval env fun of
-      Lambda argName body -> eval (extend env argName arg) body
-      f -> Application f (eval env arg)
+    let arg' = eval env arg'
+     in case eval env fun of
+          Lambda argName body -> eval (extend env argName arg') body
+          f -> Application f arg'
 
 pretty :: Expr -> String
 pretty expr = case expr of
   Variable var -> var
   Lambda arg body -> "\\" ++ arg ++ ". " ++ pretty body
-  Application fun arg -> parens fun ++ " " ++ pretty arg
+  Application fun arg -> pretty fun ++ " " ++ parens arg
   where
     parens e = case e of
       Variable var -> var

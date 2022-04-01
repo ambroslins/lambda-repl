@@ -15,7 +15,9 @@ repl =
         hFlush stdout
         line <- getLine
         case parse input line of
-          Nothing -> putStrLn "syntax error"
+          Nothing -> do
+            putStrLn "syntax error"
+            loop env
           Just Empty -> loop env
           Just Quit -> pure ()
           Just (Save path) -> do
