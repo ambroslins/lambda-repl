@@ -10,7 +10,7 @@ import Test.QuickCheck (Arbitrary (arbitrary), elements, oneof, resize, sized, (
 main :: IO ()
 main = hspec $ do
   describe "Parser.expr" $ do
-    it "parses a variabl" $
+    it "parses a variable" $
       parse expr "x" `shouldBe` pure (Variable "x")
 
     it "parses the identity function" $
