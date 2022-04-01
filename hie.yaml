@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "lib:lambda-repl"
+
+    - path: "app/Main.hs"
+      component: "lambda-repl:exe:lambda-repl-exe"
+
+    - path: "test"
+      component: "lambda-repl:test:lambda-repl-test"
