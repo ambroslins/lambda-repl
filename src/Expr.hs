@@ -24,13 +24,6 @@ eval env expr = case expr of
       Lambda argName body -> eval (extend env argName arg) body
       f -> Application f (eval env arg)
 
-data Input
-  = Empty
-  | Quit
-  | Expr Expr
-  | Define Name Expr
-  deriving (Show)
-
 pretty :: Expr -> String
 pretty expr = case expr of
   Variable var -> var

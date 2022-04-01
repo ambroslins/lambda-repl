@@ -8,7 +8,7 @@ import Control.Monad (void)
 import qualified Data.Char as Char
 import Data.Foldable (asum)
 import Data.List.NonEmpty (some1)
-import Expr (Expr (..), Input (..), Name)
+import Expr (Expr (..), Name)
 
 newtype Parser a = Parser {runParser :: String -> Maybe (a, String)}
 
@@ -45,9 +45,6 @@ lower = satisfy Char.isLower
 
 alphanum :: Parser Char
 alphanum = satisfy Char.isAlphaNum
-
-any :: Parser Char
-any = satisfy (const True)
 
 char :: Char -> Parser Char
 char c = satisfy (== c)
@@ -107,12 +104,26 @@ define = do
   x <- expr
   pure $ Define var x
 
+data Input
+  = Empty
+  | Quit
+  | Save FilePath
+  | Load FilePath
+  | Expr Expr
+  | Define Name Expr
+  deriving (Show)
+
+filePath :: Parser FilePath
+filePath = many $ satisfy (not . Char.isSpace)
+
 input :: Parser Input
 input =
   asum
     [ define,
       Expr <$> expr,
       Quit <$ symbol ":q",
+      Save <$> (symbol ":save" *> space *> filePath),
+      Load <$> (symbol ":load" *> space *> filePath),
       Empty <$ empty
     ]
     <* eof
